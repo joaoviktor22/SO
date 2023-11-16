@@ -210,7 +210,7 @@ int main() {
       break;
     }
 
-    printf("'%s' [%d]\n", running_process->name, running_process->pid);
+    printf("'%s' [PID %d]\n", running_process->name, running_process->pid);
 
     // Continua o processo sorteado
     kill(running_process->pid, SIGCONT);
