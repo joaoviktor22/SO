@@ -143,7 +143,7 @@ int main() {
 
   fill_processes_array();
 
-  int current_quantum = 0;
+  int current_time_interval = 0;
 
   // Criando processos na fila ready
   int i;
@@ -169,10 +169,10 @@ int main() {
 
       busy_wait_for_time_or_process_end(2);
 
-      current_quantum++;
+      current_time_interval++;
 
       // Caso tenha atingido o quantum, tem que trocar o processo rodando
-      if(current_quantum > 0 && current_quantum % 3 == 0) {
+      if(current_time_interval > 0 && current_time_interval % 3 == 0) {
         kill(running_process->pid, SIGSTOP);
         running_process->is_running = 0;
 
@@ -192,8 +192,8 @@ int main() {
   }
 
   // Pra alinhar os slices de tempo
-  if(select_process() != NULL && current_quantum % 3 != 0) {
-    busy_wait_for_time_or_process_end(((current_quantum % 3) - 1) * 2);
+  if(select_process() != NULL && current_time_interval % 3 != 0) {
+    busy_wait_for_time_or_process_end(((current_time_interval % 3) - 1) * 2);
   }
 
   while(1) {
