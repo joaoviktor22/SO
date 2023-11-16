@@ -152,7 +152,7 @@ int main() {
       exit(EXIT_FAILURE);
     } else if(processes[i].pid == 0) {
       // Roda programa no lugar do filho
-      execl("b.out", "b.out", NULL);
+      execl("b.out", processes[i].name, NULL);
     } else {
       processes[i].created_time = time(NULL);
       if(running_process == NULL){
