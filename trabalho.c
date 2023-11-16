@@ -90,7 +90,13 @@ void sigchld_handler(int signo) {
   }
 }
 
-// Criar processos
+int get_ticket(int prioridade){
+  if(prioridade == 1) return 2;
+  else if(prioridade == 2) return 3;
+  else return 4; 
+}
+
+// Preenche array de processos
 void fill_processes_array() {
   // Abre o arquivo de entrada
   FILE *fp = fopen("entrada.txt", "r");
@@ -104,15 +110,14 @@ void fill_processes_array() {
   while (!feof(fp)) {
     char nome[64];
     int prioridade;
-    int tickets;
 
     // Lê uma linha do arquivo
-    fscanf(fp, "%s %d %d\n", nome, &prioridade, &tickets);
+    fscanf(fp, "%s %d\n", nome, &prioridade);
 
     // Cria o processo
     strcpy(processes[i].name, nome);
     processes[i].priority = prioridade;
-    processes[i].tickets = tickets;
+    processes[i].tickets = get_ticket(prioridade);
     processes[i].start_time = -1;
     num_processes++;
 
