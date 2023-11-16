@@ -201,7 +201,7 @@ int main() {
     kill(running_process->pid, SIGSTOP);
     running_process->is_running = 0;
 
-    printf("'%s' [%d] ==> ", running_process->name, running_process->pid);
+    printf("'%s' [PID %d] ==> ", running_process->name, running_process->pid);
 
     // Loteria do proximo processo
     running_process = select_process();
