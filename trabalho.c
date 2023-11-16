@@ -31,9 +31,6 @@ int num_processes = 0; // Variável global para o número de processos
 
 process_t *running_process = NULL;
 
-//TODO: mudar o arquivo de entrada para conter apenas o processo e a prioridade
-// os tickets devem ser dados depois de ler
-
 // Função para escolher um processo com base em seus tickets
 process_t* select_process() {
   int total_tickets = 0;
