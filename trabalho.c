@@ -8,6 +8,7 @@
 #include <stdlib.h>
 
 #define QUANTUM 6
+#define DEBUG 0
 
 
 struct Process {
@@ -79,7 +80,7 @@ void sigchld_handler(int signo) {
       processes[i].is_done = 1;
       processes[i].end_time = time(NULL);
       double aux = processes[i].end_time - processes[i].start_time;
-      printf("Processo filho com PID %d terminou com status %d, comecou em %d e terminou em %d (%lf)\n", child_pid, processes[i].status,processes[i].start_time,processes[i].end_time, aux);
+      if(DEBUG) printf("Processo filho '%s' [PID %d] terminou com status %d, comecou em %d e terminou em %d (%.2lf segundos)\n", processes[i].name, child_pid, processes[i].status,processes[i].start_time,processes[i].end_time, aux);
     } else {
       // Não deveria acontecer, mas trata caso o PID não seja encontrado
       fprintf(stderr, "Erro: PID %d não encontrado na lista de processos\n", child_pid);
@@ -198,16 +199,16 @@ int main() {
     kill(running_process->pid, SIGSTOP);
     running_process->is_running = 0;
 
-    printf("'%s' [PID %d] ==> ", running_process->name, running_process->pid);
+    if(DEBUG) printf("'%s' [PID %d] ==> ", running_process->name, running_process->pid);
 
     // Loteria do proximo processo
     running_process = select_process();
     if(running_process == NULL) {
-      printf("Acabaram os Processos\n");
+      if(DEBUG) printf("Acabaram os Processos\n");
       break;
     }
 
-    printf("'%s' [PID %d]\n", running_process->name, running_process->pid);
+    if(DEBUG) printf("'%s' [PID %d]\n", running_process->name, running_process->pid);
 
     // Continua o processo sorteado
     kill(running_process->pid, SIGCONT);
@@ -218,6 +219,14 @@ int main() {
     }
 
     busy_wait_for_time_or_process_end(6);
+  }
+
+  for(i=0; i < num_processes; i++){
+    printf("\n");
+    printf("Makespan %s = %d segundos\n", processes[i].name, processes[i].end_time - processes[i].created_time);
+    printf("Tempo de execução %s = %d segundos\n", processes[i].name, processes[i].end_time - processes[i].start_time);
+    printf("\n");
+
   }
 
   return 0;
