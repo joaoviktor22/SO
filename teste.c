@@ -1,4 +1,4 @@
-#define MAX_ITERATIONS 40000000000 // Ajuste este valor conforme necessário
+#define MAX_ITERATIONS 20000000000 // Ajuste este valor conforme necessário
 
 int main(){
     long long int i;
