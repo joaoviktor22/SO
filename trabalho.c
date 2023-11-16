@@ -62,32 +62,32 @@ process_t* select_process() {
 }
 
 void sigchld_handler(int signo) {
-   (void)signo;
-   int status;
-   pid_t child_pid;
+  (void)signo;
+  int status;
+  pid_t child_pid;
 
-   // Espera por um processo filho sem bloquear
-   while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0) {
-       // Encontrar o índice do processo filho no array
-       int i;
-       for (i = 0; i < num_processes; i++) {
-           if (processes[i].pid == child_pid) {
-               break;
-           }
-       }
-
-       // Se encontrado, processa as informações sobre o processo filho
-      if (i < num_processes) {
-        processes[i].status = status;
-        processes[i].is_done = 1;
-        processes[i].end_time = time(NULL);
-        double aux = processes[i].end_time - processes[i].start_time;
-        printf("Processo filho com PID %d terminou com status %d, comecou em %d e terminou em %d (%lf)\n", child_pid, processes[i].status,processes[i].start_time,processes[i].end_time, aux);
-      } else {
-        // Não deveria acontecer, mas trata caso o PID não seja encontrado
-        fprintf(stderr, "Erro: PID %d não encontrado na lista de processos\n", child_pid);
+  // Espera por um processo filho sem bloquear
+  while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0) {
+    // Encontrar o índice do processo filho no array
+    int i;
+    for (i = 0; i < num_processes; i++) {
+      if (processes[i].pid == child_pid) {
+        break;
       }
-   }
+    }
+
+    // Se encontrado, processa as informações sobre o processo filho
+    if (i < num_processes) {
+      processes[i].status = status;
+      processes[i].is_done = 1;
+      processes[i].end_time = time(NULL);
+      double aux = processes[i].end_time - processes[i].start_time;
+      printf("Processo filho com PID %d terminou com status %d, comecou em %d e terminou em %d (%lf)\n", child_pid, processes[i].status,processes[i].start_time,processes[i].end_time, aux);
+    } else {
+      // Não deveria acontecer, mas trata caso o PID não seja encontrado
+      fprintf(stderr, "Erro: PID %d não encontrado na lista de processos\n", child_pid);
+    }
+  }
 }
 
 // Criar processos
@@ -95,28 +95,28 @@ void fill_processes_array() {
   // Abre o arquivo de entrada
   FILE *fp = fopen("entrada.txt", "r");
   if (fp == NULL) {
-      perror("Erro ao abrir o arquivo de entrada");
-      exit(EXIT_FAILURE);
+    perror("Erro ao abrir o arquivo de entrada");
+    exit(EXIT_FAILURE);
   }
 
   // Lê o arquivo de entrada
   int i = 0;
   while (!feof(fp)) {
-      char nome[64];
-      int prioridade;
-      int tickets;
+    char nome[64];
+    int prioridade;
+    int tickets;
 
-      // Lê uma linha do arquivo
-      fscanf(fp, "%s %d %d\n", nome, &prioridade, &tickets);
+    // Lê uma linha do arquivo
+    fscanf(fp, "%s %d %d\n", nome, &prioridade, &tickets);
 
-      // Cria o processo
-      strcpy(processes[i].name, nome);
-      processes[i].priority = prioridade;
-      processes[i].tickets = tickets;
-      processes[i].start_time = -1;
-      num_processes++;
+    // Cria o processo
+    strcpy(processes[i].name, nome);
+    processes[i].priority = prioridade;
+    processes[i].tickets = tickets;
+    processes[i].start_time = -1;
+    num_processes++;
 
-      i++;
+    i++;
   }
 
   // Fecha o arquivo de entrada
