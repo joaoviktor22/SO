@@ -17,7 +17,7 @@ A saída é o **Makespan** e **Tempo de Execução** de cada processo.
 Para executar o progama, basta digitar no terminal
 
 ```bash
-make ; ./a.out
+make ; ./Processo0.out
 ```
 
 ## Como visualizar durante a execução do programa

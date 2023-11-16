@@ -1,9 +1,9 @@
 .PHONY: all
 
-all: a.out b.out
+all: Processo0.out b.out
 
 b.out: teste.c
 	gcc teste.c -o b.out
 
-a.out: trabalho.c
-	gcc trabalho.c
+Processo0.out: trabalho.c
+	gcc trabalho.c -o Processo0.out

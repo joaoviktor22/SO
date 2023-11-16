@@ -26,7 +26,7 @@ struct Process {
 
 typedef struct Process process_t;
 
-process_t processes[10]; // Ajuste o tamanho conforme necessário
+process_t processes[10] = {0}; // Ajuste o tamanho conforme necessário
 
 int num_processes = 0; // Variável global para o número de processos
 
@@ -36,7 +36,7 @@ process_t *running_process = NULL;
 process_t* select_process() {
   int total_tickets = 0;
   for (int i = 0; i < num_processes; i++) {
-    if(!processes[i].is_done){
+    if(!processes[i].is_done && processes[i].pid != 0){
       total_tickets += processes[i].tickets;
     }
   }
@@ -48,7 +48,7 @@ process_t* select_process() {
   int current_ticket = 0;
 
   for (int i = 0; i < num_processes; i++) {
-    if(!processes[i].is_done){
+    if(!processes[i].is_done && processes[i].pid != 0){
       current_ticket += processes[i].tickets;
       if (winning_ticket < current_ticket) {
         return &processes[i];
@@ -117,6 +117,8 @@ void fill_processes_array() {
     processes[i].priority = prioridade;
     processes[i].tickets = get_ticket(prioridade);
     processes[i].start_time = -1;
+    processes[i].is_running = 0;
+    processes[i].is_done = 0;
     num_processes++;
 
     i++;
@@ -152,7 +154,7 @@ int main() {
       exit(EXIT_FAILURE);
     } else if(processes[i].pid == 0) {
       // Roda programa no lugar do filho
-      execl("b.out", "b.out", NULL);
+      execl("b.out", processes[i].name, NULL);
     } else {
       processes[i].created_time = time(NULL);
       if(running_process == NULL){
@@ -178,6 +180,7 @@ int main() {
 
         if(running_process == NULL) {
           printf("Acabaram os Processos\n");
+          continue;
         }
 
         running_process->is_running = 1;
